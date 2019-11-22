@@ -79,15 +79,17 @@
 
 
 
-<meta name="description" content="使用Python发送邮件之前写了一个小工具从远程服务器下载文件，然后通过附件方式发送给自己的邮箱，中间用到了Python里跟邮件相关的两个标准库email和smtp，使用也并不复杂。 123456789101112131415161718192021222324252627282930313233343536373839404142434445import smtplibimport sslfro">
+<meta name="description" content="比较Python中的列表推导式和map(),reduce()函数对一个列表（迭代器）中的元素进行批量处理是一个很常见的业务需求，在Python中，一般有三种解决方案：for循环，列表推导式，或者map(),filter()函数。 例如我们计算一下100以内奇数的平方和。 12345# for looptotal = 0for x in range(100):    if x % 2:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用Python发送邮件">
-<meta property="og:url" content="http:&#x2F;&#x2F;duyixian1234.github.io&#x2F;2019&#x2F;11&#x2F;11&#x2F;%E4%BD%BF%E7%94%A8Python%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6&#x2F;index.html">
+<meta property="og:title" content="比较Python中的列表推导式和map(),filter()函数">
+<meta property="og:url" content="http:&#x2F;&#x2F;duyixian1234.github.io&#x2F;2019&#x2F;11&#x2F;22&#x2F;%E6%AF%94%E8%BE%83Python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F%E5%92%8Cmap-filter-%E5%87%BD%E6%95%B0&#x2F;index.html">
 <meta property="og:site_name" content="那时难决">
-<meta property="og:description" content="使用Python发送邮件之前写了一个小工具从远程服务器下载文件，然后通过附件方式发送给自己的邮箱，中间用到了Python里跟邮件相关的两个标准库email和smtp，使用也并不复杂。 123456789101112131415161718192021222324252627282930313233343536373839404142434445import smtplibimport sslfro">
+<meta property="og:description" content="比较Python中的列表推导式和map(),reduce()函数对一个列表（迭代器）中的元素进行批量处理是一个很常见的业务需求，在Python中，一般有三种解决方案：for循环，列表推导式，或者map(),filter()函数。 例如我们计算一下100以内奇数的平方和。 12345# for looptotal = 0for x in range(100):    if x % 2:">
 <meta property="og:locale" content="zh">
-<meta property="og:updated_time" content="2019-11-11T03:30:38.908Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;duyixian1234.github.io&#x2F;image&#x2F;0001.png">
+<meta property="og:updated_time" content="2019-11-22T04:37:57.467Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;duyixian1234.github.io&#x2F;image&#x2F;0001.png">
 
 
 
@@ -117,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://duyixian1234.github.io/2019/11/11/使用Python发送邮件/"/>
+  <link rel="canonical" href="http://duyixian1234.github.io/2019/11/22/比较Python中的列表推导式和map-filter-函数/"/>
 
 
 
 
 
-  <title>使用Python发送邮件 | 那时难决</title>
+  <title>比较Python中的列表推导式和map(),filter()函数 | 那时难决</title>
   
 
 
@@ -230,7 +232,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://duyixian1234.github.io/2019/11/11/%E4%BD%BF%E7%94%A8Python%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/">
+    <link itemprop="mainEntityOfPage" href="http://duyixian1234.github.io/2019/11/22/%E6%AF%94%E8%BE%83Python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F%E5%92%8Cmap-filter-%E5%87%BD%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="杜逸先">
@@ -247,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">使用Python发送邮件</h1>
+          <h1 class="post-title" itemprop="name headline">比较Python中的列表推导式和map(),filter()函数</h1>
         
 
         <div class="post-meta">
@@ -259,8 +261,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-11T11:12:27+08:00">
-                2019-11-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-22T10:21:17+08:00">
+                2019-11-22
               </time>
             
 
@@ -297,8 +299,48 @@
       
 
       
-        <h1 id="使用Python发送邮件"><a href="#使用Python发送邮件" class="headerlink" title="使用Python发送邮件"></a>使用Python发送邮件</h1><p>之前写了一个小工具从远程服务器下载文件，然后通过附件方式发送给自己的邮箱，中间用到了Python里跟邮件相关的两个标准库<code>email</code>和<code>smtp</code>，使用也并不复杂。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> smtplib</span><br><span class="line"><span class="keyword">import</span> ssl</span><br><span class="line"><span class="keyword">from</span> email <span class="keyword">import</span> encoders</span><br><span class="line"><span class="keyword">from</span> email.mime.base <span class="keyword">import</span> MIMEBase</span><br><span class="line"><span class="keyword">from</span> email.mime.multipart <span class="keyword">import</span> MIMEMultipart</span><br><span class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> List, Tuple</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> app.settings <span class="keyword">import</span> config</span><br><span class="line"></span><br><span class="line">context = ssl.create_default_context() <span class="comment"># 初始化ssl上下文</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_message</span><span class="params">(sender_email: str, receiver_email: str, subject: str,</span></span></span><br><span class="line"><span class="function"><span class="params">                 content: str,</span></span></span><br><span class="line"><span class="function"><span class="params">                 attachments: List[Tuple[str, bytes]])</span> -&gt; MIMEBase:</span></span><br><span class="line">    message = MIMEMultipart() <span class="comment"># 创建一个Message对象并设置邮件的基本信息</span></span><br><span class="line">    message[<span class="string">'From'</span>] = sender_email</span><br><span class="line">    message[<span class="string">'To'</span>] = receiver_email</span><br><span class="line">    message[<span class="string">'Subject'</span>] = subject</span><br><span class="line">    message[<span class="string">'Bcc'</span>] = receiver_email</span><br><span class="line"></span><br><span class="line">    message.attach(MIMEText(content, <span class="string">'plain'</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> name, binary_content <span class="keyword">in</span> attachments: <span class="comment"># 添加附件</span></span><br><span class="line">        attachment = MIMEBase(<span class="string">"application"</span>, <span class="string">"octet-stream"</span>)</span><br><span class="line">        attachment.set_payload(binary_content)</span><br><span class="line">        encoders.encode_base64(attachment)</span><br><span class="line">        attachment.add_header(</span><br><span class="line">            <span class="string">"Content-Disposition"</span>,</span><br><span class="line">            <span class="string">f"attachment; filename= <span class="subst">&#123;name&#125;</span>"</span>,</span><br><span class="line">        )</span><br><span class="line">        message.attach(attachment)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> message</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_email</span><span class="params">(receiver_email: str, subject: str, content: str,</span></span></span><br><span class="line"><span class="function"><span class="params">               attachments: List[Tuple[str, bytes]])</span>:</span></span><br><span class="line">    <span class="keyword">with</span> smtplib.SMTP_SSL(config.host, config.port, context=context) <span class="keyword">as</span> server: <span class="comment"># 配置smtp发送服务器</span></span><br><span class="line">        sender_email, password = config.email, config.password</span><br><span class="line">        server.login(sender_email, password) <span class="comment"># 登录邮箱账户</span></span><br><span class="line">        message = make_message(sender_email, receiver_email, subject, content,</span><br><span class="line">                               attachments)</span><br><span class="line">        server.send_message(message, sender_email, receiver_email)</span><br></pre></td></tr></table></figure>
+        <h1 id="比较Python中的列表推导式和map-reduce-函数"><a href="#比较Python中的列表推导式和map-reduce-函数" class="headerlink" title="比较Python中的列表推导式和map(),reduce()函数"></a>比较Python中的列表推导式和map(),reduce()函数</h1><p>对一个列表（迭代器）中的元素进行批量处理是一个很常见的业务需求，在Python中，一般有三种解决方案：<code>for</code>循环，列表推导式，或者<code>map()</code>,<code>filter()</code>函数。</p>
+<p>例如我们计算一下100以内奇数的平方和。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for loop</span></span><br><span class="line">total = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">if</span> x % <span class="number">2</span>:</span><br><span class="line">        total += x * x</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># list comprehension</span></span><br><span class="line">sum(x * x <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">100</span>) <span class="keyword">if</span> x % <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># map(), filter()</span></span><br><span class="line">sum(map(<span class="keyword">lambda</span> x: x * x, filter(<span class="keyword">lambda</span> x: x % <span class="number">2</span>, range(<span class="number">100</span>))))</span><br></pre></td></tr></table></figure>
+
+<p><code>for</code>循环方案最容易理解但有些繁琐，列表推导式方案就简洁了很多，<code>map()</code>,<code>filter()</code>方案存在一个问题就是要理解它们嵌套关系和执行顺序。</p>
+<p>三种方案的效率也可以进行一下比较。</p>
+<p><img src="/image/0001.png" alt=""></p>
+<p>可以看到for循环和列表推导式的效率是相近的，而<code>map()</code>,<code>filter()</code>方案就慢很多，这是因为<code>map()</code>,<code>filter()</code>方案中进行了大量的函数调用，而Python解释器对列表推导式有专门的优化。</p>
+<p>我按照自己的尺度给三种方案做了一个评价。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>可理解度</th>
+<th>简洁度</th>
+<th>执行效率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>for loop</td>
+<td>★★★</td>
+<td>★</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>list comprehension</td>
+<td>★★</td>
+<td>★★★</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>map(),filter()</td>
+<td>★★</td>
+<td>★★</td>
+<td>★</td>
+</tr>
+</tbody></table>
+<p>综合而言，在Python中进行列表（迭代器）的处理，列表推导式是更简洁，效率更高的方案，也更Pythonic，不过当列表推导式过于复杂的时候，转而使用<code>for</code>循环会使代码更好理解和可维护。</p>
+
       
     </div>
     
@@ -322,8 +364,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/11/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2019/11/11/%E4%BD%BF%E7%94%A8Python%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/" rel="next" title="使用Python发送邮件">
+                <i class="fa fa-chevron-left"></i> 使用Python发送邮件
               </a>
             
           </div>
@@ -331,10 +373,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/11/22/%E6%AF%94%E8%BE%83Python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F%E5%92%8Cmap-filter-%E5%87%BD%E6%95%B0/" rel="prev" title="比较Python中的列表推导式和map(),filter()函数">
-                比较Python中的列表推导式和map(),filter()函数 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -448,7 +486,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Python发送邮件"><span class="nav-number">1.</span> <span class="nav-text">使用Python发送邮件</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#比较Python中的列表推导式和map-reduce-函数"><span class="nav-number">1.</span> <span class="nav-text">比较Python中的列表推导式和map(),reduce()函数</span></a></li></ol></div>
             
 
           </div>

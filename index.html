@@ -230,6 +230,166 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://duyixian1234.github.io/2019/11/22/%E6%AF%94%E8%BE%83Python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F%E5%92%8Cmap-filter-%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="杜逸先">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="那时难决">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/22/%E6%AF%94%E8%BE%83Python%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F%E5%92%8Cmap-filter-%E5%87%BD%E6%95%B0/" itemprop="url">比较Python中的列表推导式和map(),filter()函数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-22T10:21:17+08:00">
+                2019-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="比较Python中的列表推导式和map-reduce-函数"><a href="#比较Python中的列表推导式和map-reduce-函数" class="headerlink" title="比较Python中的列表推导式和map(),reduce()函数"></a>比较Python中的列表推导式和map(),reduce()函数</h1><p>对一个列表（迭代器）中的元素进行批量处理是一个很常见的业务需求，在Python中，一般有三种解决方案：<code>for</code>循环，列表推导式，或者<code>map()</code>,<code>filter()</code>函数。</p>
+<p>例如我们计算一下100以内奇数的平方和。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for loop</span></span><br><span class="line">total = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">if</span> x % <span class="number">2</span>:</span><br><span class="line">        total += x * x</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># list comprehension</span></span><br><span class="line">sum(x * x <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">100</span>) <span class="keyword">if</span> x % <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># map(), filter()</span></span><br><span class="line">sum(map(<span class="keyword">lambda</span> x: x * x, filter(<span class="keyword">lambda</span> x: x % <span class="number">2</span>, range(<span class="number">100</span>))))</span><br></pre></td></tr></table></figure>
+
+<p><code>for</code>循环方案最容易理解但有些繁琐，列表推导式方案就简洁了很多，<code>map()</code>,<code>filter()</code>方案存在一个问题就是要理解它们嵌套关系和执行顺序。</p>
+<p>三种方案的效率也可以进行一下比较。</p>
+<p><img src="/image/0001.png" alt=""></p>
+<p>可以看到for循环和列表推导式的效率是相近的，而<code>map()</code>,<code>filter()</code>方案就慢很多，这是因为<code>map()</code>,<code>filter()</code>方案中进行了大量的函数调用，而Python解释器对列表推导式有专门的优化。</p>
+<p>我按照自己的尺度给三种方案做了一个评价。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>可理解度</th>
+<th>简洁度</th>
+<th>执行效率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>for loop</td>
+<td>★★★</td>
+<td>★</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>list comprehension</td>
+<td>★★</td>
+<td>★★★</td>
+<td>★★★</td>
+</tr>
+<tr>
+<td>map(),filter()</td>
+<td>★★</td>
+<td>★★</td>
+<td>★</td>
+</tr>
+</tbody></table>
+<p>综合而言，在Python中进行列表（迭代器）的处理，列表推导式是更简洁，效率更高的方案，也更Pythonic，不过当列表推导式过于复杂的时候，转而使用<code>for</code>循环会使代码更好理解和可维护。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://duyixian1234.github.io/2019/11/11/%E4%BD%BF%E7%94%A8Python%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -515,7 +675,7 @@
               
                 <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
