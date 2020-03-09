@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="初识 Python3.7 的 dataclasses 标准库最近在进行一个新的后端项目时想初步应用一下领域驱动设计的思想。DDD 开发需要对一个领域对象进行各种操作，而不是把业务数据包在dict里在 action 层,repo 层中传来传去。如何方便高效地定义实体类成为一个重要前提。Python 3.7 版本引入的新标准库 dataclasses 可以帮助我们解决这个问题。 1. dataclas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识Python3.7的dataclasses标准库">
+<meta property="og:url" content="http:&#x2F;&#x2F;duyixian1234.github.io&#x2F;2020&#x2F;03&#x2F;05&#x2F;%E5%88%9D%E8%AF%86Python3-7%E4%B8%AD%E7%9A%84dataclasses%E6%A0%87%E5%87%86%E5%BA%93&#x2F;index.html">
+<meta property="og:site_name" content="那时难决">
+<meta property="og:description" content="初识 Python3.7 的 dataclasses 标准库最近在进行一个新的后端项目时想初步应用一下领域驱动设计的思想。DDD 开发需要对一个领域对象进行各种操作，而不是把业务数据包在dict里在 action 层,repo 层中传来传去。如何方便高效地定义实体类成为一个重要前提。Python 3.7 版本引入的新标准库 dataclasses 可以帮助我们解决这个问题。 1. dataclas">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2020-03-07T04:02:28.610Z">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://duyixian1234.github.io/2020/03/05/初识Python3-7中的dataclasses标准库/"/>
+
+
+
+
+
+  <title>初识Python3.7的dataclasses标准库 | 那时难决</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">那时难决</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://duyixian1234.github.io/2020/03/05/%E5%88%9D%E8%AF%86Python3-7%E4%B8%AD%E7%9A%84dataclasses%E6%A0%87%E5%87%86%E5%BA%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="杜逸先">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="那时难决">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">初识Python3.7的dataclasses标准库</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-05T16:50:06+08:00">
+                2020-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="初识-Python3-7-的-dataclasses-标准库"><a href="#初识-Python3-7-的-dataclasses-标准库" class="headerlink" title="初识 Python3.7 的 dataclasses 标准库"></a>初识 Python3.7 的 dataclasses 标准库</h1><p>最近在进行一个新的后端项目时想初步应用一下领域驱动设计的思想。DDD 开发需要对一个领域对象进行各种操作，而不是把业务数据包在<code>dict</code>里在 <code>action</code> 层,<code>repo</code> 层中传来传去。如何方便高效地定义实体类成为一个重要前提。Python 3.7 版本引入的新标准库 dataclasses 可以帮助我们解决这个问题。</p>
+<h2 id="1-dataclasses-的简介和使用"><a href="#1-dataclasses-的简介和使用" class="headerlink" title="1. dataclasses 的简介和使用"></a>1. dataclasses 的简介和使用</h2><p>dataclasses 的官方介绍是：</p>
+<blockquote>
+<p>This module provides a decorator and functions for automatically adding generated special methods such as <strong>init</strong>() and <strong>repr</strong>() to user-defined classes. It was originally described in PEP 557.</p>
+</blockquote>
+<p>使用 dataclasses 我们可以很方便地利用类型注解类定义数据类。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass</span><br><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">InventoryItem</span>:</span></span><br><span class="line">    <span class="string">'''Class for keeping track of an item in inventory.'''</span></span><br><span class="line">    name: str</span><br><span class="line">    unit_price: float</span><br><span class="line">    quantity_on_hand: int = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">total_cost</span><span class="params">(self)</span> -&gt; float:</span></span><br><span class="line">        <span class="keyword">return</span> self.unit_price * self.quantity_on_hand</span><br></pre></td></tr></table></figure>
+
+<p>使用了<code>dataclass</code>函数装饰器装饰<code>InventoryItem</code>类后，会生成<code>__init__</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name: str, unit_price: float, quantity_on_hand: int=<span class="number">0</span>)</span>:</span></span><br><span class="line">    self.name = name</span><br><span class="line">    self.unit_price = unit_price</span><br><span class="line">    self.quantity_on_hand = quantity_on_hand</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以直接实例化<code>InventoryItem</code>对象<code>InventoryItem(&#39;apple&#39;,1,10),InventoryItem(&#39;banana&#39;,1,quantity_on_hand=10)</code></p>
+<p>实际上<code>dataclass</code>函数是有很多参数的:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclasses.dataclass(*, init=True, repr=True, eq=True, order=False, unsafe_hash=False, frozen=False)</span></span><br></pre></td></tr></table></figure>
+
+<p>这里介绍一下比较常用的参数：</p>
+<ul>
+<li>init:是否生成<code>__init__</code>方法，如果用户手动定义的<code>__init__</code>方法，这个属性会被忽略。</li>
+<li>repr:是否生成<code>__repr__</code>方法。</li>
+<li>eq:是否生成<code>__eq__</code>方法以用’==’比较不同实例，会按定义顺序比较对象中的字段。</li>
+<li>order:是否生成<code>lt</code>,<code>gt</code>等方法用于比较不同实例。</li>
+<li>frozen:默认为 <code>False</code>,设置为 <code>True</code> 的话对这个类实例的字段进行复制会抛出异常，相当于定义一个不可变对象</li>
+</ul>
+<p>上文定义的<code>InventoryItem</code>类没有指定参数，全部是默认参数，具体的表现行为如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass</span><br><span class="line">   ...: @dataclass</span><br><span class="line">   ...: <span class="class"><span class="keyword">class</span> <span class="title">InventoryItem</span>:</span></span><br><span class="line">   ...:     <span class="string">'''Class for keeping track of an item in inventory.'''</span></span><br><span class="line">   ...:     name: str</span><br><span class="line">   ...:     unit_price: float</span><br><span class="line">   ...:     quantity_on_hand: int = <span class="number">0</span></span><br><span class="line">   ...:</span><br><span class="line">   ...:     <span class="function"><span class="keyword">def</span> <span class="title">total_cost</span><span class="params">(self)</span> -&gt; float:</span></span><br><span class="line">   ...:         <span class="keyword">return</span> self.unit_price * self.quantity_on_hand</span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: a = InventoryItem(<span class="string">'a'</span>,<span class="number">1</span>,<span class="number">10</span>) <span class="comment"># 定义了__init__方法</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: b = InventoryItem(<span class="string">'b'</span>,<span class="number">2</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: a <span class="comment"># 定义了__repr__方法</span></span><br><span class="line">Out[<span class="number">4</span>]: InventoryItem(name=<span class="string">'a'</span>, unit_price=<span class="number">1</span>, quantity_on_hand=<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: a == b <span class="comment"># 定义了__eq__方法</span></span><br><span class="line">Out[<span class="number">5</span>]: <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: a == InventoryItem(<span class="string">'a'</span>,<span class="number">1</span>,<span class="number">10</span>)</span><br><span class="line">Out[<span class="number">6</span>]: <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">7</span>]: a &lt; b <span class="comment"># 没有定义'__lt__'f方法</span></span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">TypeError                                 Traceback (most recent call last)</span><br><span class="line">&lt;ipython-input<span class="number">-7</span>-c41276b34900&gt; <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">----&gt; 1 a &lt; b # 没有定义'__lt__'方法</span><br><span class="line"></span><br><span class="line">TypeError: <span class="string">'&lt;'</span> <span class="keyword">not</span> supported between instances of <span class="string">'InventoryItem'</span> <span class="keyword">and</span> <span class="string">'InventoryItem'</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">8</span>]: a.name = <span class="string">'aa'</span> <span class="comment"># forzen 属性为False,可以修改字段</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">9</span>]: a</span><br><span class="line">Out[<span class="number">9</span>]: InventoryItem(name=<span class="string">'aa'</span>, unit_price=<span class="number">1</span>, quantity_on_hand=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-使用dataclasses-field修饰字段"><a href="#2-使用dataclasses-field修饰字段" class="headerlink" title="2. 使用dataclasses.field修饰字段"></a>2. 使用<code>dataclasses.field</code>修饰字段</h2><p>事实上我们不仅可以通过对 dataclass 的参数定义数据类的整体表现，也可以指定具体字段的行为，只需要用到<code>dataclasses.field</code>函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dataclasses.field(*, default=MISSING, default_factory=MISSING,\</span><br><span class="line"> repr=<span class="literal">True</span>, hash=<span class="literal">None</span>, init=<span class="literal">True</span>, compare=<span class="literal">True</span>, metadata=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+<p>介绍一下<code>field</code>函数的常用参数：</p>
+<ul>
+<li>default: 设置默认值</li>
+<li>default_factory: 设置默认工厂函数</li>
+<li>repr: 在<code>__repr__</code>方法中是否展示这个字段</li>
+<li>init: 在<code>__init__</code>方法中是否需要初始化这个字段</li>
+</ul>
+<p>其中<code>default_factory</code>属性在一些情况下作用相当大。例如我们定义如下数据类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    nums:list = []</span><br></pre></td></tr></table></figure>
+
+<p>如果一切正常的话我们实例化两个对象<code>a</code>和<code>b</code>，然后<code>a.nums.append(1)</code>，<code>b.nums.append(2)</code>，此时<code>a.nums == b.nums == [1, 2]</code>,因为<code>a.num</code>和<code>b.num</code>实际指向的都是定义<code>A</code>时初始化过的那个空列表。</p>
+<p>好在上述代码是无法运行的，会抛出异常<code>ValueError: mutable default &lt;class &#39;list&#39;&gt; for field nums is not allowed: use default_factory</code>。按照提示，我们应该制定<code>nums</code>的默认工厂函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass,field</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: @dataclass</span><br><span class="line">   ...: <span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">   ...:     nums:list = field(default_factory=list)</span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: a = A()</span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: b = A()</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: a.nums.append(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: b.nums.append(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">In [<span class="number">7</span>]: a.nums, b.nums</span><br><span class="line">Out[<span class="number">7</span>]: ([<span class="number">1</span>], [<span class="number">2</span>])</span><br></pre></td></tr></table></figure>
+
+<p>我们指定了<code>nums</code>字段的默认工厂函数是<code>list</code>,每次实例化对象的时候，都会重新调用一次<code>list</code>方法生成一个新的空列表给<code>nums</code>,从而符合我们的预期。</p>
+<h2 id="3-使用dataclasses-asdict转换对象到dict"><a href="#3-使用dataclasses-asdict转换对象到dict" class="headerlink" title="3. 使用dataclasses.asdict转换对象到dict"></a>3. 使用<code>dataclasses.asdict</code>转换对象到<code>dict</code></h2><p>我们经常会遇到需要持久化复杂数据对象的情况，比如存到数据库或者转化为<code>json</code>输出到前端。如果能方便的将对象转换成<code>dict</code>的话会很大的提高开发效率，幸运的是标准库提供了<code>dataclasses.asdict</code>函数。</p>
+<p>我们来定义一个稍微复杂一点的数据类</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    a:int</span><br><span class="line"></span><br><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span>:</span></span><br><span class="line">    name:str</span><br><span class="line">    a_list:List[A]</span><br></pre></td></tr></table></figure>
+
+<p>如果要手动把<code>B</code>类型对象转化为<code>dict</code>的话，我们大概要这样做：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">to_dict</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">'name'</span>:self.name, <span class="string">'a_list'</span>:[&#123;<span class="string">'a'</span>:x.a&#125; <span class="keyword">for</span> x <span class="keyword">in</span> self.a_list]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样的<code>to_dict</code>方法偶尔实现一次两次倒也罢了，如果每个数据类都要手动实现一个<code>to_dict</code>方法的话就太过浪费时间和精力了。使用<code>dataclasses.asdict</code>方法可以极大地提高我们的效率。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass,asdict</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: <span class="keyword">from</span> typing <span class="keyword">import</span> List</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: @dataclass</span><br><span class="line">   ...: <span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">   ...:     a:int</span><br><span class="line">   ...:</span><br><span class="line">   ...: @dataclass</span><br><span class="line">   ...: <span class="class"><span class="keyword">class</span> <span class="title">B</span>:</span></span><br><span class="line">   ...:     name:str</span><br><span class="line">   ...:     a_list:List[A]</span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">4</span>]: b = B(name=<span class="string">'b'</span>,a_list=[A(<span class="number">1</span>),A(<span class="number">2</span>),A(<span class="number">3</span>)])</span><br><span class="line"></span><br><span class="line">In [<span class="number">5</span>]: b</span><br><span class="line">Out[<span class="number">5</span>]: B(name=<span class="string">'b'</span>, a_list=[A(a=<span class="number">1</span>), A(a=<span class="number">2</span>), A(a=<span class="number">3</span>)])</span><br><span class="line"></span><br><span class="line">In [<span class="number">6</span>]: asdict(b)</span><br><span class="line">Out[<span class="number">6</span>]: &#123;<span class="string">'name'</span>: <span class="string">'b'</span>, <span class="string">'a_list'</span>: [&#123;<span class="string">'a'</span>: <span class="number">1</span>&#125;, &#123;<span class="string">'a'</span>: <span class="number">2</span>&#125;, &#123;<span class="string">'a'</span>: <span class="number">3</span>&#125;]&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-使用-post-init-方法进行一些初始化操作"><a href="#4-使用-post-init-方法进行一些初始化操作" class="headerlink" title="4. 使用__post_init__方法进行一些初始化操作"></a>4. 使用<code>__post_init__</code>方法进行一些初始化操作</h2><p>使用<code>dataclass</code>装饰的类一个主要优势就是不用手动去实现<code>__init__</code>方法，但我们经常需要在对象初始化的时候对一些数据进行校验或者额外操作，此时一个选择是手动实现<code>__init__</code>方法，其中会有大段的模板代码例如<code>self.a=a;self.b=b</code>，另一个选择是定义<code>__post_init__</code>方法来进行初始化操作，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: @dataclass</span><br><span class="line">   ...: <span class="class"><span class="keyword">class</span> <span class="title">Person</span>:</span></span><br><span class="line">   ...:     name:str</span><br><span class="line">   ...:     age:int</span><br><span class="line">   ...:</span><br><span class="line">   ...:     <span class="function"><span class="keyword">def</span> <span class="title">__post_init__</span><span class="params">(self)</span>:</span></span><br><span class="line">   ...:         <span class="keyword">if</span> self.age &lt; <span class="number">0</span>:</span><br><span class="line">   ...:             <span class="keyword">raise</span> ValueError(<span class="string">'Age &lt; 0'</span>)</span><br><span class="line">   ...:</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: Person(<span class="string">'Mike'</span>,<span class="number">-1</span>)</span><br><span class="line">---------------------------------------------------------------------------</span><br><span class="line">ValueError                                Traceback (most recent call last)</span><br><span class="line">&lt;ipython-input<span class="number">-3</span><span class="number">-4</span>b4379de6be2&gt; <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">----&gt; 1 Person('Mike',-1)</span><br><span class="line"></span><br><span class="line">&lt;string&gt; <span class="keyword">in</span> __init__(self, name, age)</span><br><span class="line"></span><br><span class="line">&lt;ipython-input<span class="number">-2</span><span class="number">-1e8016803</span>a1d&gt; <span class="keyword">in</span> __post_init__(self)</span><br><span class="line">      <span class="number">6</span>     <span class="function"><span class="keyword">def</span> <span class="title">__post_init__</span><span class="params">(self)</span>:</span></span><br><span class="line">      <span class="number">7</span>         <span class="keyword">if</span> self.age &lt; <span class="number">0</span>:</span><br><span class="line">----&gt; 8             raise ValueError('Age &lt; 0')</span><br><span class="line">      <span class="number">9</span></span><br><span class="line"></span><br><span class="line">ValueError: Age &lt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>今天向大家介绍了 Python 3.7 中<code>dataclasses</code>标准库的简单使用。<br>作为一个以灵活著称的编程语言，我们使用 Python 处理结构化数据的时候经常会使用<code>dict</code>在不同模块间传来传去，然后在需要的地方进行数据的校验和格式转换，无意间会增加很多相似的代码，真正的核心逻辑淹没在这些校验和转换过程中，单元测试的复杂度也随之提高。<br>利用新版本 Python 的类型提示和 dataclasses 标准库，配合一些开发工具（mypy,pylint 等）我们可以较为放心地将数据对象在不同模块方法间传递使用，有助于改进 Python 在大型项目下的开发效率和安全性。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/05/%E5%88%9D%E8%AF%86Python3-7%E7%9A%84dataclass/" rel="next" title="初识Python3.7的dataclass">
+                <i class="fa fa-chevron-left"></i> 初识Python3.7的dataclass
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">杜逸先</p>
+              <p class="site-description motion-element" itemprop="description">我的技术博客</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初识-Python3-7-的-dataclasses-标准库"><span class="nav-number">1.</span> <span class="nav-text">初识 Python3.7 的 dataclasses 标准库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-dataclasses-的简介和使用"><span class="nav-number">1.1.</span> <span class="nav-text">1. dataclasses 的简介和使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-使用dataclasses-field修饰字段"><span class="nav-number">1.2.</span> <span class="nav-text">2. 使用dataclasses.field修饰字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-使用dataclasses-asdict转换对象到dict"><span class="nav-number">1.3.</span> <span class="nav-text">3. 使用dataclasses.asdict转换对象到dict</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-使用-post-init-方法进行一些初始化操作"><span class="nav-number">1.4.</span> <span class="nav-text">4. 使用__post_init__方法进行一些初始化操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">杜逸先</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+  <div class="footer-custom"><a target="_blank" href="http://www.beian.miit.gov.cn/">浙ICP备20006538号</a></div>
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=66529623";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
