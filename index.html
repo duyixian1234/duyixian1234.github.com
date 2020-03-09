@@ -230,138 +230,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://duyixian1234.github.io/2020/03/05/%E5%88%9D%E8%AF%86Python3-7%E7%9A%84dataclass/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="杜逸先">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="那时难决">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/05/%E5%88%9D%E8%AF%86Python3-7%E7%9A%84dataclass/" itemprop="url">初识Python3.7的dataclass</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-05T16:50:06+08:00">
-                2020-03-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="初识-Python3-7-的-dataclass"><a href="#初识-Python3-7-的-dataclass" class="headerlink" title="初识 Python3.7 的 dataclass"></a>初识 Python3.7 的 dataclass</h1><p>最近在进行一个新的后端项目时想初步应用一下领域驱动设计 DDD 的思想。DDD 开发需要对一个领域对象进行各种操作，而不是把业务数据包在<code>dict</code>里在 action 层,repo 层中传来传去，要能够比较方便地定义各种实体类，Python 3.7 版本引入的新标准库 dataclasses 可以帮助我们解决这个问题。</p>
-<h2 id="dataclasses-的简介和使用"><a href="#dataclasses-的简介和使用" class="headerlink" title="dataclasses 的简介和使用"></a>dataclasses 的简介和使用</h2><p>dataclasses 的官方介绍是：</p>
-<blockquote>
-<p>This module provides a decorator and functions for automatically adding generated special methods such as <strong>init</strong>() and <strong>repr</strong>() to user-defined classes. It was originally described in PEP 557.</p>
-</blockquote>
-<p>使用 dataclasses 我们可以很方便地利用类型注解类定义数据类。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass</span><br><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">InventoryItem</span>:</span></span><br><span class="line">    <span class="string">'''Class for keeping track of an item in inventory.'''</span></span><br><span class="line">    name: str</span><br><span class="line">    unit_price: float</span><br><span class="line">    quantity_on_hand: int = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">total_cost</span><span class="params">(self)</span> -&gt; float:</span></span><br><span class="line">        <span class="keyword">return</span> self.unit_price * self.quantity_on_hand</span><br></pre></td></tr></table></figure>
-
-<p>使用了<code>dataclass</code>函数装饰器装饰<code>InventoryItem</code>类后，会生成这样的<code>__init__</code>方法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name: str, unit_price: float, quantity_on_hand: int=<span class="number">0</span>)</span>:</span></span><br><span class="line">    self.name = name</span><br><span class="line">    self.unit_price = unit_price</span><br><span class="line">    self.quantity_on_hand = quantity_on_hand</span><br></pre></td></tr></table></figure>
-
-<p>实际上<code>dataclass</code>函数是有很多参数的:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclasses.dataclass(*, init=True, repr=True, eq=True, order=False, unsafe_hash=False, frozen=False)</span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://duyixian1234.github.io/2020/03/05/%E5%88%9D%E8%AF%86Python3-7%E4%B8%AD%E7%9A%84dataclasses%E6%A0%87%E5%87%86%E5%BA%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1107,7 +975,7 @@
               
                 <a href="/archives%7C%7C%20archive">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
